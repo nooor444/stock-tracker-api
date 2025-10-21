@@ -30,8 +30,6 @@ stores them in a local **SQLite database**, and provides **historical data & ana
     version="1.0.0",
     contact={
         "name": "Noor Kanwal",
-        "url": "https://github.com/<yourusername>",
-        "email": "youremail@example.com",
     },
 )
 
