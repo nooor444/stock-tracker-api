@@ -8,6 +8,7 @@ from database import SessionLocal, engine
 from models import Base
 import crud
 from schemas import StockPrice, HistoryItem, AnalysisResult
+from s3_backup import backup_database
 import io
 import matplotlib
 matplotlib.use("Agg")  # Use non-GUI backend for servers
@@ -48,7 +49,7 @@ def get_db():
 
 @app.get("/", tags=["Health Check"])
 def home():
-    return {"message": " Stock Tracker API is running successfully!"}
+    return {"message": "Stock Tracker API is running successfully!"}
 
 
 # Fetch live stock price and store
@@ -67,6 +68,7 @@ def fetch_stock(ticker: str, db: Session = Depends(get_db)):
     latest = data.tail(1)
     price = float(latest["Close"].iloc[0])
     crud.add_stock(db, ticker, price)
+    backup_database()
 
     return {"ticker": ticker.upper(), "price": round(price, 2)}
 
