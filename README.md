@@ -24,7 +24,7 @@ EventBridge (hourly)
 
 ## Live API
 
-Base URL: `http://YOUR_EC2_PUBLIC_IP:8000`
+Base URL: `http://54.77.164.94:8000`
 
 | Endpoint | Method | Description |
 |---|---|---|
