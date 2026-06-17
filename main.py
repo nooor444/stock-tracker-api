@@ -1,4 +1,4 @@
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, HTMLResponse
 import matplotlib.pyplot as plt
 from fastapi import FastAPI, Depends, Query, HTTPException
 from sqlalchemy.orm import Session
@@ -47,9 +47,10 @@ def get_db():
 
 # Root endpoint
 
-@app.get("/", tags=["Health Check"])
+@app.get("/", response_class=HTMLResponse, include_in_schema=False)
 def home():
-    return {"message": "Stock Tracker API is running successfully!"}
+    with open("landing.html", "r") as f:
+        return HTMLResponse(content=f.read())
 
 
 # Fetch live stock price and store
@@ -169,3 +170,11 @@ def chart_ticker(
 
     # Return image as a streamed response
     return StreamingResponse(buf, media_type="image/png")
+
+# Landing page
+from fastapi.responses import HTMLResponse
+
+@app.get("/", response_class=HTMLResponse, include_in_schema=False)
+def landing():
+    with open("landing.html", "r") as f:
+        return f.read()

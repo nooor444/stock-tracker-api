@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stock Tracker API</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0a0a; color: #fff; min-height: 100vh; }
+    .hero { padding: 80px 40px; text-align: center; background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #0a0a0a 100%); border-bottom: 1px solid #222; }
+    .badge { display: inline-block; background: #00d4aa22; border: 1px solid #00d4aa44; color: #00d4aa; padding: 6px 16px; border-radius: 20px; font-size: 13px; margin-bottom: 24px; }
+    h1 { font-size: 52px; font-weight: 700; background: linear-gradient(135deg, #fff 0%, #00d4aa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 16px; }
+    .subtitle { font-size: 18px; color: #888; max-width: 600px; margin: 0 auto 40px; line-height: 1.6; }
+    .stats { display: flex; justify-content: center; gap: 48px; margin-bottom: 48px; }
+    .stat { text-align: center; }
+    .stat-value { font-size: 32px; font-weight: 700; color: #00d4aa; }
+    .stat-label { font-size: 13px; color: #666; margin-top: 4px; }
+    .buttons { display: flex; gap: 16px; justify-content: center; }
+    .btn { padding: 14px 32px; border-radius: 8px; font-size: 15px; font-weight: 600; text-decoration: none; transition: all 0.2s; }
+    .btn-primary { background: #00d4aa; color: #000; }
+    .btn-primary:hover { background: #00f0c0; transform: translateY(-2px); }
+    .btn-secondary { background: transparent; color: #fff; border: 1px solid #333; }
+    .btn-secondary:hover { border-color: #00d4aa; color: #00d4aa; }
+    .arch { padding: 60px 40px; max-width: 900px; margin: 0 auto; }
+    .arch h2 { font-size: 28px; font-weight: 600; margin-bottom: 32px; text-align: center; color: #fff; }
+    .arch-diagram { background: #111; border: 1px solid #222; border-radius: 12px; padding: 32px; font-family: monospace; font-size: 14px; color: #00d4aa; line-height: 2; text-align: center; }
+    .endpoints { padding: 0 40px 60px; max-width: 900px; margin: 0 auto; }
+    .endpoints h2 { font-size: 28px; font-weight: 600; margin-bottom: 32px; text-align: center; }
+    .endpoint { display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: #111; border: 1px solid #222; border-radius: 8px; margin-bottom: 12px; transition: border-color 0.2s; }
+    .endpoint:hover { border-color: #00d4aa44; }
+    .method { background: #00d4aa22; color: #00d4aa; padding: 4px 12px; border-radius: 4px; font-family: monospace; font-size: 13px; font-weight: 600; min-width: 60px; text-align: center; }
+    .path { font-family: monospace; font-size: 15px; color: #fff; flex: 1; }
+    .desc { font-size: 14px; color: #666; }
+    .stack { padding: 0 40px 60px; max-width: 900px; margin: 0 auto; text-align: center; }
+    .stack h2 { font-size: 28px; font-weight: 600; margin-bottom: 32px; }
+    .tags { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+    .tag { background: #111; border: 1px solid #222; padding: 8px 20px; border-radius: 20px; font-size: 14px; color: #aaa; }
+    .footer { text-align: center; padding: 40px; border-top: 1px solid #111; color: #444; font-size: 14px; }
+    .footer a { color: #00d4aa; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <div class="badge">🟢 Live on AWS EC2 · Ireland (eu-west-1)</div>
+    <h1>Stock Tracker API</h1>
+    <p class="subtitle">A production-grade REST API for real-time stock data — deployed on AWS with automated ingestion and persistent cloud storage.</p>
+    <div class="stats">
+      <div class="stat"><div class="stat-value">EC2</div><div class="stat-label">Application Server</div></div>
+      <div class="stat"><div class="stat-value">S3</div><div class="stat-label">Data Persistence</div></div>
+      <div class="stat"><div class="stat-value">Lambda</div><div class="stat-label">Hourly Ingestion</div></div>
+      <div class="stat"><div class="stat-value">FastAPI</div><div class="stat-label">REST Framework</div></div>
+    </div>
+    <div class="buttons">
+      <a href="/docs" class="btn btn-primary">View API Docs</a>
+      <a href="https://github.com/nooor444/stock-tracker-api" class="btn btn-secondary">GitHub</a>
+    </div>
+  </div>
+  <div class="arch">
+    <h2>Architecture</h2>
+    <div class="arch-diagram">
+EventBridge (rate: 1 hour)<br>↓<br>AWS Lambda ← triggers stock ingestion<br>↓<br>AWS EC2 (Ubuntu 22.04) ← FastAPI application server<br>↓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓<br>SQLite DB&nbsp;&nbsp;&nbsp;&nbsp;AWS S3 ← persistent database backups
+    </div>
+  </div>
+  <div class="endpoints">
+    <h2>Endpoints</h2>
+    <div class="endpoint"><span class="method">GET</span><span class="path">/stock/{ticker}</span><span class="desc">Fetch live stock price and store to DB</span></div>
+    <div class="endpoint"><span class="method">GET</span><span class="path">/history/{ticker}</span><span class="desc">Retrieve full price history for a ticker</span></div>
+    <div class="endpoint"><span class="method">GET</span><span class="path">/analysis/{ticker}</span><span class="desc">Trend analysis — min, max, avg, % change</span></div>
+    <div class="endpoint"><span class="method">GET</span><span class="path">/chart/{ticker}</span><span class="desc">Time-series price chart (PNG)</span></div>
+    <div class="endpoint"><span class="method">GET</span><span class="path">/docs</span><span class="desc">Interactive Swagger API documentation</span></div>
+  </div>
+  <div class="stack">
+    <h2>Tech Stack</h2>
+    <div class="tags">
+      <span class="tag">Python</span><span class="tag">FastAPI</span><span class="tag">AWS EC2</span><span class="tag">AWS S3</span><span class="tag">AWS Lambda</span><span class="tag">SQLite</span><span class="tag">SQLAlchemy</span><span class="tag">yfinance</span><span class="tag">Matplotlib</span><span class="tag">Gunicorn</span><span class="tag">REST API</span><span class="tag">Microservices</span><span class="tag">Cloud-Native</span><span class="tag">Distributed Systems</span>
+    </div>
+  </div>
+  <div class="footer">
+    Built by <a href="https://linkedin.com/in/YOUR_LINKEDIN">Noor Kanwal</a> · <a href="https://github.com/nooor444/stock-tracker-api">GitHub</a> · Deployed on AWS eu-west-1
+  </div>
+</body>
+</html>
